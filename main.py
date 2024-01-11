@@ -4,7 +4,6 @@ import os
 import openai
 from api_key import Api_key
 # from langchain_community.llms import OpenAI as text_openai
-# from langchain.llms import OpenAI
 from langchain_openai import OpenAI
 
 from query import category
@@ -12,7 +11,7 @@ os.environ['OPENAI_API_KEY'] = Api_key
 
 
 client = OpenAI()
-
+#prab
 
 # image_url = response.data[0].url
 
