@@ -3,57 +3,63 @@ import streamlit as st
 import os
 import openai
 from api_key import Api_key
-# from langchain_community.llms import OpenAI as text_openai
-# from langchain.llms import OpenAI
-from langchain_openai import OpenAI
-
-from query import category
+from langchain.prompts import PromptTemplate
+from query import relevancy
 os.environ['OPENAI_API_KEY'] = Api_key
-
-
 client = OpenAI()
 
 
-# image_url = response.data[0].url
-
-
-
 def generate_using_api(input):
-    response = client.images.generate(
-        model="dall-e-3",
-        prompt=input,
-        size="1024x1024",
-        quality="standard",
-        n=1,
-    )
+    """This function inputs prompt and outputs image url"""
+    try:
+        response = client.images.generate(
+            model="dall-e-3",
+            style="natural",
+            prompt=input,
+            size=size,
+            quality=option,
+            n=1,
+        )
 
-    image_url = response.data[0].url
-    return image_url
+        image_url = response.data[0].url
+        return image_url
+    except Exception as e:
+        st.write('Oops! Write Appropriate prompt', e)
 
 
 st.title('AI Image Generation Using Searcly')
-choice = st.sidebar.selectbox('Select your choice', ['option1', 'option2'])
+choice = st.sidebar.selectbox('Select your choice', ['Home Page', 'Image To Text'])
 
 with st.expander('What is Searcly ?'):
-    st.write('Searcy is a text-to-image generation tool which .')
+    st.write("""Searcly is a cutting-edge text-to-image tool specially designed for fashion aficionados.
+     Our innovative platform utilizes the powerful AI text to image engine to bring your fashion dreams to life. 
+     With Searcly, you have the power to conceptualize and visualize the perfect dress or apparel by simply typing in 
+     your desires.""")
 
-if choice == 'option1':
-    st.write('OPTION 1')
-elif choice == 'option2':
+if choice == 'Home Page':
+    st.write('How It Works :')
+    st.write("""Input Your Desires:
+     Whether it's a dreamy wedding gown, a casual summer dress, or a trendy streetwear 
+    ensemble,
+     let your imagination flow through your fingertips. Type in your specific prompts about the dress or apparel you 
+     have in mind.""")
+elif choice == 'Image To Text':
     st.subheader('Visualize your Fashion Fantasies !')
     input_text = st.text_input('what you have in mind today?')
+    size = st.selectbox('Select Image Size', ['1024x1024', '1024x1792', '1792x1024'])
+    option = st.radio(label="Quality",options=('standard','hd'))
     if input_text is not None:
         if st.button('Generate Image'):
             st.info(input_text)
-            # prompt = f'if above text is related to fashion, return 1 else 0"""{input_text}"""'
-            output = category(input_text)
+            value = relevancy(input_text)
 
-
-            if output == 1:
-
+            if value == 1:
 
                 image_url = generate_using_api(input_text)
                 st.image(image_url)
-            else : st.write('please enter a prompt related to fashion !!')
+
+            else:
+                st.write('please enter a prompt related to fashion !!')
+
 
 

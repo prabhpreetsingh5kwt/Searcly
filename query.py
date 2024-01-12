@@ -1,17 +1,30 @@
+import json
+from openai import OpenAI
 import os
-from langchain_community.llms import OpenAI as text_openai
-
 from api_key import Api_key
 os.environ['OPENAI_API_KEY'] = Api_key
-#
-# openai_key = Api_key
-def category(input_text):
-    prompt = f'if above text is related to fashion, return 1 else 0"""{input_text}"""'
-    print(input_text)
-    llm = text_openai(
-        model_name="gpt-3.5-turbo-instruct",
-        # openai_api_key=openai_key
-    )
-    output = llm(prompt)
-    output = int(output)
-    return output
+client = OpenAI()
+
+
+def relevancy(input_text):
+    try:
+        response = client.chat.completions.create(
+          model="gpt-3.5-turbo-1106",
+          response_format={"type": "json_object"},
+          messages=[
+            {"role": "system", "content": "if given prompt is related to fashion, return 1, else 0 in output as JSON."},
+            {"role": "user", "content": input_text}
+          ],
+          temperature=0,
+          max_tokens=250,
+          top_p=1,
+          frequency_penalty=0,
+          presence_penalty=0,
+          seed=1001
+        )
+        message = response.choices[0].message.content
+        message = json.loads(message)
+        value = message['fashion_related']
+        return value
+    except Exception as e:
+        print('relevancy error', e)
