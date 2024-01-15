@@ -7,6 +7,8 @@ client = OpenAI()
 
 
 def relevancy(input_text):
+    """This function uses gpt 3.5-turbo model to check the relevancy of
+    the given prompt to the preferred domain and returns a json output as 0 as not relevant and 1 as relevant"""
     try:
         response = client.chat.completions.create(
           model="gpt-3.5-turbo-1106",
