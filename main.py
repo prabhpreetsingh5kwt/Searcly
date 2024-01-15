@@ -26,7 +26,7 @@ def generate_using_api(input):
 
 
 st.title('AI Image Generation Using Searcly')
-choice = st.sidebar.selectbox('Select your choice', ['Home Page', 'Image To Text'])
+choice = st.sidebar.selectbox('Select your choice', ['Home Page', 'Text To Image'])
 
 with st.expander('What is Searcly ?'):
     st.write("""Searcly is a cutting-edge text-to-image tool specially designed for fashion aficionados.
@@ -41,7 +41,7 @@ if choice == 'Home Page':
     ensemble,
      let your imagination flow through your fingertips. Type in your specific prompts about the dress or apparel you 
      have in mind.""")
-elif choice == 'Image To Text':
+elif choice == 'Text To Image':
     st.subheader('Visualize your Fashion Fantasies !')
     input_text = st.text_input('what you have in mind today?')
     size = st.selectbox('Select Image Size', ['1024x1024', '1024x1792', '1792x1024'])
