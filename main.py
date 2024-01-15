@@ -1,9 +1,7 @@
 from openai import OpenAI
 import streamlit as st
 import os
-import openai
 from api_key import Api_key
-from langchain.prompts import PromptTemplate
 from query import relevancy
 os.environ['OPENAI_API_KEY'] = Api_key
 client = OpenAI()
@@ -24,7 +22,7 @@ def generate_using_api(input):
         image_url = response.data[0].url
         return image_url
     except Exception as e:
-        st.write('Oops! Write Appropriate prompt', e)
+        st.write('Oops! Write Appropriate prompt')
 
 
 st.title('AI Image Generation Using Searcly')

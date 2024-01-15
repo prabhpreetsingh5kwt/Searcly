@@ -27,4 +27,4 @@ def relevancy(input_text):
         value = message['fashion_related']
         return value
     except Exception as e:
-        print('relevancy error', e)
+        print('relevancy error')
