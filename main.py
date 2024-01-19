@@ -70,13 +70,7 @@ elif choice == 'Text To Image':
 
                 image_urls = generate_using_api(input_text)
                 print('image_urls==', image_urls)
-                n_cols = 3
 
-                # n_rows = (len(image_urls) + n_cols - 1) // n_cols
-                # rows = [st.columns(n_cols) for _ in range(n_rows)]
-                # cols = [column for row in rows for column in row]
-                # for col,image_url in zip(cols, image_urls):
-                #     col.image(image_url)
                 for image_url in image_urls:
                     st.image(image_url)
 
