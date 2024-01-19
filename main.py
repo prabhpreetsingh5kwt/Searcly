@@ -3,24 +3,27 @@ import streamlit as st
 import os
 from api_key import Api_key
 from query import relevancy
+from config import size_dalle2,size_dalle3
 os.environ['OPENAI_API_KEY'] = Api_key
 client = OpenAI()
 
 
-def generate_using_api(input):
+def generate_using_api(input_prompt):
     """This function inputs prompt and outputs image url"""
     try:
         response = client.images.generate(
-            model="dall-e-3",
+            model=model,
             style="natural",
-            prompt=input,
+            prompt=input_prompt,
             size=size,
             quality=option,
-            n=1,
+            n=num,
         )
 
-        image_url = response.data[0].url
-        return image_url
+        image_urls = [item.url for item in response.data]
+
+        return image_urls
+
     except Exception as e:
         st.write('Oops! Write Appropriate prompt')
 
@@ -44,17 +47,38 @@ if choice == 'Home Page':
 elif choice == 'Text To Image':
     st.subheader('Visualize your Fashion Fantasies !')
     input_text = st.text_input('what you have in mind today?')
-    size = st.selectbox('Select Image Size', ['1024x1024', '1024x1792', '1792x1024'])
-    option = st.radio(label="Quality",options=('standard','hd'))
+
+    num = st.slider(label='Number of Images:', min_value=1, max_value=10)
+    size_list = []
+    if num > 1:
+        model = 'dall-e-2'
+        size_list = size_dalle2
+
+    if num == 1:
+        model = 'dall-e-3'
+        size_list = size_dalle3
+
+    size = st.selectbox('Select Image Size', size_list)
+    option = st.radio(label="Quality", options=('standard', 'hd'))
     if input_text is not None:
         if st.button('Generate Image'):
             st.info(input_text)
             value = relevancy(input_text)
+            print('value==', value)
 
             if value == 1:
 
-                image_url = generate_using_api(input_text)
-                st.image(image_url)
+                image_urls = generate_using_api(input_text)
+                print('image_urls==', image_urls)
+                n_cols = 3
+
+                # n_rows = (len(image_urls) + n_cols - 1) // n_cols
+                # rows = [st.columns(n_cols) for _ in range(n_rows)]
+                # cols = [column for row in rows for column in row]
+                # for col,image_url in zip(cols, image_urls):
+                #     col.image(image_url)
+                for image_url in image_urls:
+                    st.image(image_url)
 
             else:
                 st.write('please enter a prompt related to fashion !!')

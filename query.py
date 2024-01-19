@@ -14,7 +14,7 @@ def relevancy(input_text):
           model="gpt-3.5-turbo-1106",
           response_format={"type": "json_object"},
           messages=[
-            {"role": "system", "content": "if given prompt is related to fashion, return 1, else 0 in output as JSON."},
+            {"role": "system", "content": "if given prompt is related to fashion or modelling, return 1, else 0 in output as JSON. Always keep the value strictly as 0 or 1 "},
             {"role": "user", "content": input_text}
           ],
           temperature=0,
