@@ -290,8 +290,7 @@ elif choice == 'Fun AI Generation!':
 
             image = Image.open(io.BytesIO(image_bytes))
             st.image(image)
-if __name__ == "__main__":
-    "__main__"
+
 
 
 
