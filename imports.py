@@ -17,3 +17,4 @@ from segmentation import show_mask, show_box, show_points, load_model, predict_b
 from config import API_URL, headers
 import time
 import replicate
+from config import replicate_ai_token

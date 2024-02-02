@@ -109,7 +109,7 @@ elif choice == 'Text To Image':
     if on:
         # Function to handle keypress events for real-time generation
 
-        os.environ["REPLICATE_API_TOKEN"] = "r8_XIqHDe4ZuG1TYMs4bNpnG7UWvJaU5Kk2mbVpG"
+        os.environ["REPLICATE_API_TOKEN"] = replicate_ai_token
         value = st_keyup("Enter Text", debounce=500, key="2")
 
         start = time.time()

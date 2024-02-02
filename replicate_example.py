@@ -5,7 +5,6 @@ from st_keyup import st_keyup
 import replicate
 import os
 
-# os.system('export REPLICATE_API_TOKEN=r8_XIqHDe4ZuG1TYMs4bNpnG7UWvJaU5Kk2mbVpG')
 os.environ["REPLICATE_API_TOKEN"] = "r8_XIqHDe4ZuG1TYMs4bNpnG7UWvJaU5Kk2mbVpG"
 value = st_keyup("Enter Text", debounce=500, key="2")
 
