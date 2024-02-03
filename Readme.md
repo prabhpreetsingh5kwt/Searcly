@@ -39,9 +39,11 @@ While Stable Diffusion, Midjourney, Dreambooth and other Open-Source models are 
 ### How to Start :-
 * git clone the project
 * go to project directory
-* Open terminal and type"pip install requirements.txt"
+* Open terminal and type"pip install -r requirements.txt"
+* In main.py, line number 4, os.environ['OPENAI_API_KEY'] = "<enter your openai api key>"
+
 * run the app using "streamlit run _path_to_directory_\main.py"
-### Files and its uses :- 
+### Files and its uses :-
 main.py :- streamlit text to image app
 
 query.py :- To check relevancy of user's prompt to product using gpt 3.5 turbo.

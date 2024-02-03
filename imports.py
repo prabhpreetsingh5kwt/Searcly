@@ -13,8 +13,8 @@ import torch
 import  numpy as np
 import cv2
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
-from segmentation import show_mask, show_box, show_points, load_model, predict_background
 from config import API_URL, headers
 import time
 import replicate
 from config import replicate_ai_token
+from config import image_path

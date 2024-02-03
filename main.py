@@ -32,7 +32,7 @@ def generate_using_api(input_prompt,n):
 
 
 # Sidebar Dropdown menu to navigate between different sections
-choice = st.sidebar.selectbox('Select your choice', ['Home Page', 'Text To Image', 'Background Changer', 'Fun AI Generation!'])
+choice = st.sidebar.selectbox('Select your choice', ['Home Page', 'Text To Image', 'Fun AI Generation!'])
 
 # Handling different sections based on the user's choice
 if choice == 'Home Page':
@@ -49,6 +49,8 @@ if choice == 'Home Page':
     ensemble,
      let your imagination flow through your fingertips. Type in your specific prompts about the dress or apparel you 
      have in mind.""")
+    st.image(image_path)
+    st.title('See the next generation visual product discovery!')
 
 elif choice == 'Text To Image':
     # Section for Text to Image functionality
@@ -85,23 +87,21 @@ elif choice == 'Text To Image':
     option = st.radio(label="Quality", options=('standard', 'hd'))
 
     # Generate images based on user input
-    if input_text is not None:
-        if st.button('Generate Image'):
+
+    if st.button('Generate Image'):
+        if input_text is not None:
             st.info(input_text)
-            # relevancy function checks if the prompt is related to Searcly specific domain (e-commerce and fashion)
-            value = relevancy(input_text)
-            print('value==', value)
 
-            if value == 1:
-                # Call function to generate images using the OpenAI API
-                image_urls = generate_using_api(input_text,num)
-                print('image_urls==', image_urls)
+            # Call function to generate images using the OpenAI API
+            image_urls = generate_using_api(input_text,num)
+            print('image_urls==', image_urls)
 
-                # Display the generated images
-                for image_url in image_urls:
-                    st.image(image_url)
-            else:
-                st.write('Please enter a prompt related to the fashion industry!!')
+            # Display the generated images
+            for image_url in image_urls:
+                st.image(image_url)
+
+        else:
+            st.write('Please Enter a Prompt')
 
     # Real-time generation toggle
     on = st.toggle(label="RealTime Generation")
@@ -131,121 +131,6 @@ elif choice == 'Text To Image':
         # st.write(end - start)
 
 
-
-
-
-elif choice == 'Background Changer':
-    # Section for Background Changer functionality
-    st.title('Background Changer')
-    st.subheader('Upload an Image to get started!')
-
-    # File uploader for image input
-    file = st.file_uploader('label', label_visibility='hidden', type=['png', 'jpeg', 'jpg'])
-    if file is not None:
-
-        # Create a directory to store uploaded images
-        new_dir = 'temp/'
-        if not os.path.exists(new_dir):
-            os.makedirs(new_dir)
-        newfile_path = f"{new_dir}/{file.name}"
-        st.image(file, caption=file.name, width=250)
-
-        # Save the uploaded image to a temporary directory
-        with open(newfile_path, "wb") as f:
-            f.write(file.getbuffer())
-
-        # Button to delete the uploaded image
-        if st.button('Delete Image'):
-            try:
-                for file in os.listdir(new_dir):
-                    os.remove(newfile_path)
-            except Exception as e:
-                print(e)
-
-        # Load YOLOv5 model for object detection
-        model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
-        model.conf = 0.7
-
-        # Run object detection on the uploaded image
-        results = model(newfile_path)
-
-        # Render the image and resize it
-        pil_image = Image.fromarray(np.squeeze(results.render()).astype(np.uint8))
-        resized_image = pil_image.resize((800, 800))  # Adjust the size as needed
-
-        # Display the detected objects and labels
-        df = results.pandas().xyxy[0]
-        print(df)
-
-        # Extract label names to a list
-        label_names = df['name'].tolist()
-        print(label_names)
-
-        # Dropdown to select a label
-        selected_label = st.selectbox("Select Label", label_names)
-        st.image(resized_image, use_column_width=True)
-
-        # Get the index of the selected label
-        selected_index = label_names.index(selected_label)
-        selected_boxes = results.xyxy[0].cpu().numpy()[df['name'] == selected_label][:, :4]
-        print('selected_boxes', selected_boxes)
-
-        # Load a segmentation model
-        sam = load_model()
-
-        if selected_boxes is not None:
-            # Dropdown to choose a background
-            background_choice = st.selectbox('Choose a Background', ['woodenbg', 'Kitchen', 'Living Room', 'Beach'])
-
-            # Button to change the background
-            if st.button(label='Change Background'):
-
-                # Create a SamPredictor object for segmentation
-                predictor = SamPredictor(sam)
-                image = cv2.cvtColor(cv2.imread(newfile_path), cv2.COLOR_BGR2RGB)
-                predictor.set_image(image)
-                input_box = np.array(selected_boxes)
-
-                # Predict background masks
-                masks = predict_background(image, selected_boxes, predictor)
-
-                # Display the original image with masks and bounding box
-                fig, ax = plt.subplots(figsize=(10, 10))
-                ax.imshow(image)
-                show_mask(masks[0], ax)
-                show_box(input_box, ax)
-                ax.axis('off')
-
-                # Load the chosen background image
-                bg_dir = "background"
-                bg = f"{bg_dir}/{background_choice}.jpg"
-                background_image_bgr = cv2.imread(bg)
-
-                # Process the segmentation mask
-                segmentation_mask = masks[0]
-                binary_mask = np.where(segmentation_mask > 0.5, 1, 0)
-
-                # Convert background image to RGB
-                background_image_rgb = cv2.cvtColor(background_image_bgr, cv2.COLOR_BGR2RGB)
-
-                # Sliders to control the position of the new image
-                x_position = st.slider("X Position", 0, image.shape[1] - 1, 0)
-                y_position = st.slider("Y Position", 0, image.shape[0] - 1, 0)
-
-                # Resize the background image to match the size of the original image
-                background_image_rgb = cv2.resize(background_image_rgb, (image.shape[1], image.shape[0]))
-
-                # Compose the new image by blending the background and the object using the segmentation mask
-                new_image = background_image_rgb * (1 - binary_mask[..., np.newaxis]) + image * binary_mask[..., np.newaxis]
-                new_image = np.roll(new_image, (y_position, x_position), axis=(0, 1))
-
-                # Convert the NumPy array to a PIL Image
-                pil_image = Image.fromarray(new_image.astype(np.uint8))
-
-                # Display the final image in Streamlit
-                st.image(pil_image, use_column_width=True)
-
-
 elif choice == 'Fun AI Generation!':
     # Section for Fun AI Generation functionality
     st.header('Let Us Fuel Your Imagination🔥 ')
@@ -261,16 +146,26 @@ elif choice == 'Fun AI Generation!':
 
     # If style choice is natural, prompt is sent to dall-e-3
     if style_choice == "Natural":
+        prompt = f'{style_choice}: {text}, 8k, high quality'
 
         if col7.button(label="Generate"):
-
-            model = 'dall-e-3'
-            size = '1024x1024'
-            num = 1
-            option = 'standard'
-            image_urls = generate_using_api(text,n=num)
-            for image_url in image_urls:
-                st.image(image_url, width=600)
+            output = replicate.run(
+                "fofr/sdxl-emoji:dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e",
+                input={
+                    "prompt": prompt,
+                    "negative_prompt": "deformed face, bad quality, ugly, deformed hands, deformed body, anime, digital"
+                }
+            )
+            print(output)
+            st.image(image=output)
+        #
+        #     model = 'dall-e-3'
+        #     size = '1024x1024'
+        #     num = 1
+        #     option = 'standard'
+        #     image_urls = generate_using_api(text,n=num)
+        #     for image_url in image_urls:
+        #         st.image(image_url, width=600)
 
 
     else:
