@@ -4,7 +4,6 @@ from PIL import Image
 from openai import OpenAI
 import streamlit as st
 import os
-from api_key import Api_key
 from query import relevancy
 from config import size_dalle2,size_dalle3
 from st_keyup import st_keyup
