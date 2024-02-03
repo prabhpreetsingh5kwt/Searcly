@@ -40,7 +40,7 @@ While Stable Diffusion, Midjourney, Dreambooth and other Open-Source models are 
 * git clone the project
 * go to project directory
 * Open terminal and type"pip -r install requirements.txt"
-* * In main.py, line number 4, os.environ['OPENAI_API_KEY'] = "enter your openai api key"
+* In main.py, line number 4, os.environ['OPENAI_API_KEY'] = "enter your openai api key"
 * run the app using "streamlit run _path_to_directory_\main.py"
 ### Files and its uses :- 
 main.py :- streamlit text to image app
