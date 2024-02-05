@@ -1,14 +1,15 @@
 # Importing necessary libraries from imports file
 from imports import *
 # Set OpenAI API key
-os.environ['OPENAI_API_KEY'] = Api_key
+os.environ['OPENAI_API_KEY'] = "<>enter your openai api key"
+os.environ["REPLICATE_API_TOKEN"] = replicate_ai_token
 
 # Create an OpenAI client
 client = OpenAI()
 
 
 # Function to generate images using the OpenAI API
-def generate_using_api(input_prompt,n):
+def generate_using_api(input_prompt, n):
     """This function inputs a prompt and outputs image URLs"""
     try:
         # Call OpenAI API to generate images based on the input prompt and parameters selected in ui
@@ -74,34 +75,67 @@ elif choice == 'Text To Image':
 
     # Set the model and size based on the number of images
     size_list = []
-    if num > 1:
-        model = 'dall-e-2'
-        size_list = size_dalle2
-
-    elif num == 1:
-        model = 'dall-e-3'
-        size_list = size_dalle3
-    # Dropdown to select the size of an image
-    size = st.selectbox('Select Image Size', size_list)
-    # Dropdown to select quality of an image
-    option = st.radio(label="Quality", options=('standard', 'hd'))
+    # if num > 1:
+    #     if st.button(label="Generate"):
+    #         output = replicate.run(
+    #             "fofr/sdxl-emoji:dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e",
+    #             input={
+    #                 "prompt": f"{input_text}, 8k, full hd, raw, dslr",
+    #                 "negative_prompt": "deformed face, bad quality, ugly, deformed hands, deformed body, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation",
+    #                 "num_outputs":num
+    #             }
+    #         )
+    #         print(output)
+    #         for image in output:
+    #             st.image(image=image)
+    #
+    # elif num == 1:
+    #     model = 'dall-e-3'
+    #     size_list = size_dalle3
+    # # Dropdown to select the size of an image
+    # size = st.selectbox('Select Image Size', size_list)
+    # # Dropdown to select quality of an image
+    # option = st.radio(label="Quality", options=('standard', 'hd'))
 
     # Generate images based on user input
-
-    if st.button('Generate Image'):
-        if input_text is not None:
+    if num == 1:
+        # if st.button('Generate Image'):
+            if input_text is not None:
+                # if num == 1:
+                    model = 'dall-e-3'
+                    size_list = size_dalle3
+                # Dropdown to select the size of an image
+            size = st.selectbox('Select Image Size', size_list)
+            # Dropdown to select quality of an image
+            option = st.radio(label="Quality", options=('standard', 'hd'))
             st.info(input_text)
+            if st.button('Generate Image'):
+                # Call function to generate images using the OpenAI API
+                image_urls = generate_using_api(input_text, num)
+                print('image_urls==', image_urls)
 
-            # Call function to generate images using the OpenAI API
-            image_urls = generate_using_api(input_text,num)
-            print('image_urls==', image_urls)
+                # Display the generated images
+                for image_url in image_urls:
+                    st.image(image_url)
 
-            # Display the generated images
-            for image_url in image_urls:
-                st.image(image_url)
 
-        else:
-            st.write('Please Enter a Prompt')
+
+    elif num > 1:
+            if st.button(label="Generate"):
+                output = replicate.run(
+                    "fofr/sdxl-emoji:dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e",
+                    input={
+                        "prompt": f"{input_text}, 8k, full hd, raw, dslr",
+                        "negative_prompt": "unreal,digital,cartoon,deformed face, bad quality, ugly, deformed hands, deformed body, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation",
+                        "num_outputs": num
+                    }
+                )
+                print(output)
+                for image in output:
+                    st.image(image=image)
+
+    else:
+        st.write('Please Enter a Prompt')
 
     # Real-time generation toggle
     on = st.toggle(label="RealTime Generation")
@@ -137,7 +171,7 @@ elif choice == 'Fun AI Generation!':
     text = st.text_input(label="Let's have fun!", key='text',)
     st.write('Choose Your Style :')
     # dropdown for image style
-    style_choice = st.selectbox(label='Select Style', options=['Natural', 'Anime', 'Digital Art', 'Pixel Art', 'Manga', 'Neo Punk'])
+    style_choice = st.selectbox(label='Select Style', options=['Natural', 'Anime', 'Digital-Art', 'Pixel-Art', 'Manga', 'Neo Punk'])
     # Add extra spaces for generate button
     st.text('')
     st.text('')
@@ -158,15 +192,6 @@ elif choice == 'Fun AI Generation!':
             )
             print(output)
             st.image(image=output)
-        #
-        #     model = 'dall-e-3'
-        #     size = '1024x1024'
-        #     num = 1
-        #     option = 'standard'
-        #     image_urls = generate_using_api(text,n=num)
-        #     for image_url in image_urls:
-        #         st.image(image_url, width=600)
-
 
     else:
         if col7.button(label="Generate"):
@@ -174,17 +199,15 @@ elif choice == 'Fun AI Generation!':
             prompt = f'{style_choice}: {text}'
 
             # Stable diffusion 2 inference API (config.py)
-            def query(payload):
-                response = requests.post(API_URL, headers=headers, json=payload)
-                return response.content
-
-
-            image_bytes = query({
-                "inputs": prompt,'negative_prompt':'blurry, deformed hands, Ugly, deformed face, deformed body, mutated body parts, disfigured, bad anatomy, deformed body features'
-            })
-
-            image = Image.open(io.BytesIO(image_bytes))
-            st.image(image)
+            output = replicate.run(
+                "fofr/sdxl-emoji:dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e",
+                input={
+                    "prompt": prompt,
+                    "negative_prompt": "deformed face, bad quality, ugly, deformed hands, deformed body, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation"
+                }
+            )
+            print(output)
+            st.image(image=output)
 
 
 

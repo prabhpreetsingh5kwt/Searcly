@@ -49,6 +49,35 @@ main.py :- streamlit text to image app
 query.py :- To check relevancy of user's prompt to product using gpt 3.5 turbo.
 
 
+### Realtime Gen :
+Realtime Gen is a feature which generates images in an instant. Model keeps creating
+images till the user types.
+
+**Solution Adopted :**
+Sdxl turbo model by Stability AI is a text to image model which generates images in realtime.
+Around 16 gb of VRam is required to run the model. So, alternative was found at Replicate.com where inference api for the model was found.
+
+Only drawback of this inference api was that it took huge amount of time to generate its first image.
+  
+After researching, i found out that when the models are not used frequently, they are shut down to 
+save the resources. So when the model form replicate is called,if it is not a already running model,
+it first boots up and then is available to use.
+https://replicate.com/docs/how-does-replicate-work#cold-boots
+
+### Fun AI Generation :
+Fun AI Generation is a feature which allows the user to get images in different styles such
+as Anime, Natural, Manga, Digital-Art, Pixel-Art.
+
+**Solution Adopted:**
+First Inference Api of Stable Diffusion 2 was Used which had some unpromising results. On the contrary, 
+the sdxl-emoji model from replicate had some very good results. 
+
+Sdxl-emoji's results may seem promising, but it still has issues while generating images.
+Even with the help of negative prompts, sdxl-emoji is more prone to error while generating images
+which result in bad anatomy, mutated limbs and body parts.
+the comparison of both is shared here in this drive link.
+
+
 
 _Disclaimers :-_
 There can be certain scenarios where AI generated images 
