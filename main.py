@@ -75,27 +75,7 @@ elif choice == 'Text To Image':
 
     # Set the model and size based on the number of images
     size_list = []
-    # if num > 1:
-    #     if st.button(label="Generate"):
-    #         output = replicate.run(
-    #             "fofr/sdxl-emoji:dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e",
-    #             input={
-    #                 "prompt": f"{input_text}, 8k, full hd, raw, dslr",
-    #                 "negative_prompt": "deformed face, bad quality, ugly, deformed hands, deformed body, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation",
-    #                 "num_outputs":num
-    #             }
-    #         )
-    #         print(output)
-    #         for image in output:
-    #             st.image(image=image)
-    #
-    # elif num == 1:
-    #     model = 'dall-e-3'
-    #     size_list = size_dalle3
-    # # Dropdown to select the size of an image
-    # size = st.selectbox('Select Image Size', size_list)
-    # # Dropdown to select quality of an image
-    # option = st.radio(label="Quality", options=('standard', 'hd'))
+
 
     # Generate images based on user input
     if num == 1:
