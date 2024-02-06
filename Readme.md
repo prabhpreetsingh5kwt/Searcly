@@ -76,6 +76,7 @@ Sdxl-emoji's results may seem promising, but it still has issues while generatin
 Even with the help of negative prompts, sdxl-emoji is more prone to error while generating images
 which result in bad anatomy, mutated limbs and body parts.
 the comparison of both is shared here in this drive link.
+https://drive.google.com/drive/folders/1odxY8pE6ps38kqt5CBXTVky3LUHiIhvp?usp=sharing
 
 
 

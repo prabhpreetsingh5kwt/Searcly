@@ -2,7 +2,7 @@
 from imports import *
 # Set OpenAI API key
 os.environ['OPENAI_API_KEY'] = "<>enter your openai api key"
-os.environ["REPLICATE_API_TOKEN"] = replicate_ai_token
+os.environ["REPLICATE_API_TOKEN"] = "r8_Fih4CzckEnLWp0ENDhCDXvY2su3wv3v0IEv5X"
 
 # Create an OpenAI client
 client = OpenAI()
@@ -167,7 +167,7 @@ elif choice == 'Fun AI Generation!':
                 "fofr/sdxl-emoji:dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e",
                 input={
                     "prompt": prompt,
-                    "negative_prompt": "deformed face, bad quality, ugly, deformed hands, deformed body, anime, digital"
+                    "negative_prompt": "deformed face, ugly, deformed hands, deformed limbs, anime, digital"
                 }
             )
             print(output)
