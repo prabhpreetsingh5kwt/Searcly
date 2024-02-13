@@ -1,7 +1,7 @@
 # Importing necessary libraries from imports file
 from imports import *
 # Set OpenAI API key
-os.environ['OPENAI_API_KEY'] = "<>enter your openai api key"
+os.environ['OPENAI_API_KEY'] = "<enter your openai api key>"
 os.environ["REPLICATE_API_TOKEN"] = "r8_Fih4CzckEnLWp0ENDhCDXvY2su3wv3v0IEv5X"
 
 # Create an OpenAI client
